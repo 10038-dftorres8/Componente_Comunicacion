@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarea 4</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    componente-con-boton,
+    componente-con-informacion {
+      margin-bottom: 20px;
+    }
+
+    #miBoton {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: rgb(107, 155, 227);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #miBoton:hover {
+      background-color: #4563a0;
+    }
+
+  </style>
+</head>
+<body>
+
+<script>
+class ComponenteConBoton extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = '<button id="miBoton">Clic aquí</button>';
+    this.querySelector('#miBoton').addEventListener('click', () => {
+      const evento = new CustomEvent('actualizar-informacion', {
+        detail: { mensaje: '¡Hola desde el primer componente!' }
+      });
+      document.dispatchEvent(evento);
+    });
+  }
+}
+customElements.define('componente-con-boton', ComponenteConBoton);
+</script>
+
+<script>
+class ComponenteConInformacion extends HTMLElement {
+  connectedCallback() {
+    this.innerHTML = '<div id="infoContainer">Esperando interacción...</div>';
+    document.addEventListener('actualizar-informacion', (event) => {
+      const infoContainer = this.querySelector('#infoContainer');
+      infoContainer.textContent = event.detail.mensaje;
+    });
+  }
+}
+customElements.define('componente-con-informacion', ComponenteConInformacion);
+</script>
+
+<componente-con-boton></componente-con-boton>
+<componente-con-informacion></componente-con-informacion>
+
+</body>
+</html>
